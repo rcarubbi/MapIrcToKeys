@@ -1,14 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace SendKeys
 {
-    class NativeWin32
+    internal class NativeWin32
     {
+        public delegate int EnumWindowsProcDelegate(int hWnd, int lParam);
+
         public const int WM_SYSCOMMAND = 0x0112;
         public const int SC_CLOSE = 0xF060;
+
+        private const int GWL_EXSTYLE = -20;
+        private const int WS_EX_TOOLWINDOW = 0x80;
+        private const int WS_EX_APPWINDOW = 0x40000;
+
+        public const int GW_HWNDFIRST = 0;
+        public const int GW_HWNDLAST = 1;
+        public const int GW_HWNDNEXT = 2;
+        public const int GW_HWNDPREV = 3;
+        public const int GW_OWNER = 4;
+        public const int GW_CHILD = 5;
 
         [DllImport("user32.dll")]
         public static extern int FindWindow(
@@ -27,20 +38,7 @@ namespace SendKeys
         [DllImport("user32.dll")]
         public static extern int SetForegroundWindow(
             int hWnd // handle to window
-            );
-
-        private const int GWL_EXSTYLE = (-20);
-        private const int WS_EX_TOOLWINDOW = 0x80;
-        private const int WS_EX_APPWINDOW = 0x40000;
-              
-        public const int GW_HWNDFIRST = 0;
-        public const int GW_HWNDLAST  = 1;
-        public const int GW_HWNDNEXT  = 2;
-        public const int GW_HWNDPREV  = 3;
-        public const int GW_OWNER     = 4;
-        public const int GW_CHILD     = 5;
-
-        public delegate int EnumWindowsProcDelegate(int hWnd, int lParam);
+        );
 
         [DllImport("user32")]
         public static extern int EnumWindows(EnumWindowsProcDelegate lpEnumFunc, int lParam);
